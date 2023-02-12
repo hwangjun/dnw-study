@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+  nginx:
+    image: nginx:1.21.5-alpine
+    ports: 
+      - "80:80"
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - backend
+      - frontend
+
+  nest:
+    build: ./nest
+    ports:
+      - "8000:8000"
+    container_name: nest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - backend
+
+  next:
+    build: ./next
+    ports:
+      - "3000:3000"
+    container_name: next
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - frontend
+
+  db:
+    image: mariadb:10
+    container_name: db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/data:/var/lib/mysql
+      - ./db/initdb.d:/docker-entrypoint-initdb.d
+    env_file: db/.env
+    environment:
+      TZ: Asia/Seoul
+    restart: always
+    networks:
+      - backend
+  
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
+
+
+
+
+
+
