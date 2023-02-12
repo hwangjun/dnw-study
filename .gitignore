@@ -1,0 +1,4 @@
+.history
+db/data
+db/conf.d
+db/initdb.d
