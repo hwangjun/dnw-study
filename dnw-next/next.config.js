@@ -1,8 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   experimental: {
     appDir: true,
   },
+  webpackDevMiddleware: config => {
+    config.watchOptions = {
+      poll:true
+    }
+    return config;
+  }
 }
 
-module.exports = nextConfig
+export default nextConfig

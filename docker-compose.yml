@@ -26,14 +26,22 @@ services:
       - db  
 
   next:
-    build: ./dnw-next
+    build: 
+      context: ./dnw-next
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     container_name: next
+    restart: "on-failure"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - frontend
+    volumes:
+      # hot reload를 위해 mount
+      - "./dnw-next:/usr/src/dnw-next"
+      - "/usr/src/dnw-next/node_modules"
+      - "/usr/src/dnw-next/.dnw-next"  
 
   db:
     image: mariadb:10
